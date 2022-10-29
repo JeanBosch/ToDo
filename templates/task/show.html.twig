@@ -1,0 +1,9 @@
+{% extends 'base2.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        {{ task.content|nl2br}}
+
+        <a href="{{ path('task_list') }}" class="btn btn-primary">Retour à la liste des tâches</a>
+    </div>
+{% endblock %}

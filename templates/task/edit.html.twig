@@ -1,6 +1,10 @@
 {% extends 'base3.html.twig' %}
-
 {% block body %}
+
+
+{% if app.user == task.user or app.user.roles[0] == 'ROLE_ADMIN' %}
+
+
     <div class="row">
         {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
             {{ form_widget(form) }}
@@ -8,4 +12,17 @@
             <button type="submit" class="btn btn-success pull-right">Modifier</button>
         {{ form_end(form) }}
     </div>
+
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger">
+                Vous n'avez pas les droits pour modifier cette tâche.
+            </div>
+        </div>
+    </div>
+
+{% endif %}
 {% endblock %}
+

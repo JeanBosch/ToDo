@@ -11,7 +11,7 @@
 		{% if app.user %}
 			<div class="mb-3">
 				Vous êtes connecté sur le compte
-				{{ app.user.userIdentifier }},
+				{{ app.user.username }},
 				<a href="{{ path('app_logout') }}">Déconnexion</a>
 			</div>
 		{% endif %}

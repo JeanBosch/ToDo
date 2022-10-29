@@ -1,36 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block header_img %}<img class="slide-image" src="assets/img/todolist_content.jpg" alt="todo list">{% endblock %}
+{% block header_img %}<img class="slide-image" src="assets/img/todolist_content.jpg" alt="todo list">
+{% endblock %}
 
 {% block body %}
-    <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
-    <div class="row">
-        {% for task in tasks %}
-        <div class="col-sm-4 col-lg-4 col-md-4">
-            <div class="thumbnail">
-                <div class="caption">
-                    <h4 class="pull-right">
-                        {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
-                    </h4>
-                    <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
-                    <p>{{ task.content }}</p>
-                </div>
-                <div>
-                    <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                        <button class="btn btn-success btn-sm pull-right">
-                            {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
-                        </button>
-                    </form>
-                    <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                        <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
-                    </form>
-                </div>
+
+	<div class="row btn_crea">
+		<a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
+	</div>
+	<div class="row task_list">
+		{% for task in tasks %}
+
+			<div class="col-sm-4 col-lg-4 col-md-4 ">
+				<div class="thumbnail">
+					<div class="caption">
+						<h4 class="pull-right">
+							{% if task.isDone %}
+								<span class="glyphicon glyphicon-ok"></span>
+							{% else %}
+								<span class="glyphicon glyphicon-remove"></span>
+							{% endif %}
+						</h4>
+						{% if task.user %}
+							<h4>
+								<a href="{{ path('task_show', {'id' : task.id }) }}">
+									{{ task.title }}
+									:
+									{{task.user.username}}</a>
+							</h4>
+						{% else %}
+							<h4>
+								<a href="{{ path('task_show', {'id' : task.id }) }}">{{ task.title }}
+									: Utilisateur anonyme</a>
+							</h4>
+						{% endif %}
+
+
+						<p>{{ task.content|nl2br }}</p>
+					</div>
+                    {% if app.user %}
+					{% if task.user == app.user or app.user.roles[0] == 'ROLE_ADMIN' %}
+						<div class="boutons_modif">
+							<form action="{{ path('task_toggle', {'id' : task.id }) }}">
+								<button class="btn btn-success btn-sm pull-right">
+									{% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée
+									{% endif %}
+								</button>
+							</form>
+
+							<a class="small fw-medium" href="#" onclick="document.getElementById('id01_{{task.id}}').style.display='block'">
+								<button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+							</a>
+
+							<form action="{{ path('task_edit', {'id' : task.id }) }}">
+								<button class="btn btn-alert btn-sm pull-right">
+									Modifier
+								</button>
+							</form>
+						</div>
+					{% endif %}
+                    {% endif %}
+				</div>
+			</div>
+
+			<div id="id01_{{task.id}}" class="modal">
+                <span onclick="document.getElementById('id01_{{task.id}}').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <form class="modal-content" action="">
+                    <div class="container">
+                        <h1>Suppression tâche</h1>
+                        <p>Etes vous sûr de vouloir supprimer cette tâche ?</p>
+
+                        <div class="clearfix">
+                            <a class="small fw-medium" href="{{ path('task_list') }}">
+                                <button type="button" class="cancelbtn">Annuler</button>
+                            </a>
+                            <a class="small fw-medium" href="{{ path('task_delete', {'id' : task.id }) }}">
+                                <button type="button" class="deletebtn">Supprimer</button>
+                            </a>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                Il n'y a pas encore de tâche enregistrée. <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
-            </div>
-        {% endfor %}
-    </div>
+		{% else %}
+			<div class="alert alert-warning" role="alert">
+				Il n'y a pas encore de tâche enregistrée.
+				<a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+			</div>
+
+            
+
+			
+
+		{% endfor %}
+	</div>
 {% endblock %}

@@ -11,13 +11,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class UserController extends AbstractController
 {
     /**
      * @Route("/users", name="user_list")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
-    public function listAction(UserRepository $repository)
+     
+    public function listUserAction(UserRepository $repository)
     {
         $users = $repository->findAll();
         return $this->render('user/list.html.twig', ['users' => $users]);
@@ -25,8 +28,9 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/create", name="user_create")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
-    public function createAction(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher) : Response
+    public function createUserAction(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher) : Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -53,9 +57,10 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit") 
+     * @Route("/users/{id}/edit", name="user_edit")
+     * @Security("is_granted('ROLE_ADMIN')") 
      */
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em): Response
+    public function editUserAction(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(UserType::class, $user);
 

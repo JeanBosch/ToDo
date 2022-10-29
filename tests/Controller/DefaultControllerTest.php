@@ -1,18 +1,31 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace App\Tests\Controller;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
+
 {
+
+    private KernelBrowser $client;
+
+    public function setUp(): void
+
+    {
+
+        $this->client = static::createClient();
+
+    }
+
     public function testIndex()
     {
-        $client = static::createClient();
 
-        $crawler = $client->request('GET', '/');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
+        $urlgenerator = $this->client->getContainer()->get('router.default');
+        $this->client->request('GET', $urlgenerator->generate('homepage'));
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

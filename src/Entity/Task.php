@@ -41,14 +41,22 @@ class Task
     private $isDone;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks", fetch="EAGER")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $test;
+    private $user;
+
 
     public function __construct()
     {
+   
         $this->createdAt = new \Datetime();
         $this->isDone = false;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function getId()
@@ -96,15 +104,17 @@ class Task
         $this->isDone = $flag;
     }
 
-    public function getTest(): ?string
+    public function getUser(): ?User
     {
-        return $this->test;
+        return $this->user;
     }
 
-    public function setTest(?string $test): self
+    public function setUser(?User $user): self
     {
-        $this->test = $test;
+        $this->user = $user;
 
         return $this;
     }
+
+   
 }

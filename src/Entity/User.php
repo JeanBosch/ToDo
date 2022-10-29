@@ -40,6 +40,22 @@ class User implements UserInterface
      */
     private $email;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $tasks;
+    
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -65,9 +81,23 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-    public function getRoles()
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        return array('ROLE_USER');
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -115,5 +145,10 @@ class User implements UserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getTasks()
+    {
+        return $this->tasks;
     }
 }
