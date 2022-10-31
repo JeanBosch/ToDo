@@ -35,10 +35,15 @@ class SecurityControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
-    public function testLogout()
+    public function testAuthenticate()
     {
+        $this->client->request('GET', $this->urlGenerator->generate('login'));  
+        $this->client->submitForm('Connexion', [
+            'email' => 'cabau.matthieu@gmail.com',
+            'password' => '0123456789'
+        ]); 
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
             
-            $this->client->request('GET', $this->urlGenerator->generate('app_logout'));
-            $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
     }
+    
 }

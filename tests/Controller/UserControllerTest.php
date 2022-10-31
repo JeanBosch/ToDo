@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DomCrawler\Crawler;
 
 
 class UserControllerTest extends WebTestCase
@@ -15,6 +16,7 @@ class UserControllerTest extends WebTestCase
 {
 
     private KernelBrowser $client;
+    
 
 
 
@@ -23,12 +25,14 @@ class UserControllerTest extends WebTestCase
     {
 
         $this->client = static::createClient();
+        $this->client->followRedirects();
+        
         $this->userRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
         $this->taskRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class);
         //Pour tester un user normal, rempalcer l'adresse mail par cabau.matthieu@orange.fr
         // Pour tester un user admin, rempalcer l'adresse mail par cabau.matthieu@gmail.com
-        $this->user = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@orange.fr']);
-        $this->userEdit = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@orange.fr']);
+        $this->user = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@gmail.com']);
+        $this->userEdit = $this->userRepository->findOneBy(['id' => 3]);
         $this->task = $this->taskRepository->findOneBy(['id' => '50']);
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
         $this->client->loginUser($this->user);
@@ -50,8 +54,15 @@ class UserControllerTest extends WebTestCase
     public function testCreateUserAction()
     {
         $roleUser[] = $this->user->getRoles();
-        $this->client->request('GET', $this->urlGenerator->generate('user_create'));
+        $crawler = $this->client->request('GET', $this->urlGenerator->generate('user_create'));
         if($roleUser[0][0] == "ROLE_ADMIN"){
+            $form = $crawler->selectButton('Ajouter')->form();
+            $form['user[username]'] = 'test';
+            $form['user[email]'] = 'test@test.test';
+            $form['user[password][first]'] = 'test';
+            $form['user[password][second]'] = 'test';
+            $form['user[roles]'] = 'ROLE_USER';
+            $this->client->submit($form);
             $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         }else{
             $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -61,13 +72,23 @@ class UserControllerTest extends WebTestCase
     public function testEditUserAction()
     {
         $roleUser[] = $this->user->getRoles();
-        $this->client->request('GET', $this->urlGenerator->generate('user_edit', ['id' => $this->userEdit->getId()]));
+        $crawler = $this->client->request('GET', $this->urlGenerator->generate('user_edit', ['id' => $this->userEdit->getId()]));
         if($roleUser[0][0] == "ROLE_ADMIN"){
+            $form = $crawler->selectButton('Modifier')->form();
+            $form['user[username]'] = 'testmodif';
+            $form['user[password][first]'] = 'test';
+            $form['user[password][second]'] = 'test';
+            $form['user[email]'] = 'testmodif@test.test';
+            $form['user[roles]'] = 'ROLE_USER';
+            $this->client->submit($form);
             $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         }else{
             $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         }
     }
+
+ 
+        
 
     
 }

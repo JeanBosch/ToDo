@@ -23,15 +23,36 @@
         </testsuite>
     </testsuites>
 
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
+    <filter>
+        <whitelist>
+            <directory>src</directory>
+            <exclude>
+                <directory>src/Kernel.php</directory>
+                <directory>src/Entity</directory>
+                <directory>src/Migrations</directory>
+                <directory>src/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
+
+    <logging>
+  <log type="coverage-html" target="/tmp/report" lowUpperBound="35"
+       highLowerBound="70"/>
+  <log type="coverage-clover" target="/tmp/coverage.xml"/>
+  <log type="coverage-php" target="/tmp/coverage.serialized"/>
+  <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+  <log type="junit" target="/tmp/logfile.xml"/>
+  <log type="testdox-html" target="/tmp/testdox.html"/>
+  <log type="testdox-text" target="/tmp/testdox.txt"/>
+</logging>
+
+<extensions>
+<extension class ="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+</extensions>
 
     <!-- Run `composer require symfony/panther` before enabling this extension -->
     <!--

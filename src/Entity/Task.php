@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\TaskRepository")
  * @ORM\Table
  */
 class Task
@@ -92,6 +92,11 @@ class Task
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    public function setIsDone()
+    {
+        $this->isDone = false;
     }
 
     public function isDone()

@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DomCrawler\Crawler;
 
 
 class TaskControllerTest extends WebTestCase
@@ -23,12 +24,13 @@ class TaskControllerTest extends WebTestCase
     {
 
         $this->client = static::createClient();
+        $this->client->followRedirects();
         $this->userRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
         $this->taskRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class);
         //Pour tester un user normal, rempalcer l'adresse mail par cabau.matthieu@orange.fr
         // Pour tester un user admin, rempalcer l'adresse mail par cabau.matthieu@gmail.com
-        $this->user = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@orange.fr']);
-        $this->task = $this->taskRepository->findOneBy(['id' => '50']);
+        $this->user = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@gmail.com']);
+        $this->task = $this->taskRepository->findOneBy(['id' => '71']);
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
         $this->client->loginUser($this->user);
     }
@@ -58,7 +60,11 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateAction()
     {
-        $this->client->request('GET', $this->urlGenerator->generate('task_create'));
+        $crawler = $this->client->request('GET', $this->urlGenerator->generate('task_create'));
+        $form = $crawler->selectButton('Ajouter')->form();
+        $form['task[title]'] = 'Test';
+        $form['task[content]'] = 'Test';
+        $this->client->submit($form);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
@@ -73,9 +79,12 @@ class TaskControllerTest extends WebTestCase
         var_dump($this->task->getUser()->getId());
         var_dump("-----------------------");
         var_dump($roleUser[0][0]);*/
-        $this->client->request('GET', $this->urlGenerator->generate('task_edit', ['id' => $this->task->getId()]));
+        $crawler= $this->client->request('GET', $this->urlGenerator->generate('task_edit', ['id' => $this->task->getId()]));
         if($roleUser[0][0] == "ROLE_ADMIN" || $this->user->getId() == $this->task->getUser()->getId()){
-            
+            $form = $crawler->selectButton('Modifier')->form();
+            $form['task[title]'] = 'Testmodifié';
+            $form['task[content]'] = 'Testmodifié';
+            $this->client->submit($form);
             $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         } else {
             
@@ -88,14 +97,25 @@ class TaskControllerTest extends WebTestCase
     {
         $roleUser[] = $this->user->getRoles();
 
-        $this->client->request('GET', $this->urlGenerator->generate('task_toggle', ['id' => $this->task->getId()]));
+        
         if($roleUser[0][0] == "ROLE_ADMIN" || $this->user->getId() == $this->task->getUser()->getId()){
+            if($this->task->IsDone() == false){
+            $this->client->request('GET', $this->urlGenerator->generate('task_toggle', ['id' => $this->task->getId()]));              
             
-            $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
-        } else {
+            $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche ' . $this->task->getTitle() .' a bien été marquée comme faite.');
+            $this->assertResponseStatusCodeSame(Response::HTTP_OK);
             
+        }
+            else {
+                $this->client->request('GET', $this->urlGenerator->generate('task_toggle', ['id' => $this->task->getId()]));
+            
+                $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche ' . $this->task->getTitle() .' a bien été marquée comme faite.');
+                $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+            }
+     } else {
             $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         }
+        
     }
 
     public function testDeleteAction()
@@ -105,7 +125,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->request('GET', $this->urlGenerator->generate('task_delete', ['id' => $this->task->getId()]));
         if($roleUser[0][0] == "ROLE_ADMIN" || $this->user->getId() == $this->task->getUser()->getId()){
             
-            $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+            $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         } else {
             
             $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
