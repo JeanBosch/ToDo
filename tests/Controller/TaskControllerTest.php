@@ -27,10 +27,10 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirects();
         $this->userRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
         $this->taskRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class);
-        //Pour tester un user normal, rempalcer l'adresse mail par cabau.matthieu@orange.fr
-        // Pour tester un user admin, rempalcer l'adresse mail par cabau.matthieu@gmail.com
+        //Pour tester un user normal, remplacer l'adresse mail par cabau.matthieu@orange.fr
+        // Pour tester un user admin, remplacer l'adresse mail par cabau.matthieu@gmail.com
         $this->user = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@gmail.com']);
-        $this->task = $this->taskRepository->findOneBy(['id' => '71']);
+        $this->task = $this->taskRepository->findOneBy(['id' => '77']);
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
         $this->client->loginUser($this->user);
     }
@@ -72,13 +72,6 @@ class TaskControllerTest extends WebTestCase
     {
         
         $roleUser[] = $this->user->getRoles();
-        /*dd($this->task);
-        var_dump("-----------------------");
-        var_dump($this->user->getId());
-        var_dump("-----------------------");
-        var_dump($this->task->getUser()->getId());
-        var_dump("-----------------------");
-        var_dump($roleUser[0][0]);*/
         $crawler= $this->client->request('GET', $this->urlGenerator->generate('task_edit', ['id' => $this->task->getId()]));
         if($roleUser[0][0] == "ROLE_ADMIN" || $this->user->getId() == $this->task->getUser()->getId()){
             $form = $crawler->selectButton('Modifier')->form();

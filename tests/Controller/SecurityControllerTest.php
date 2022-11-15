@@ -20,8 +20,8 @@ class SecurityControllerTest extends WebTestCase
 
         $this->client = static::createClient();
         $this->userRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
-        //Pour tester un user normal, rempalcer l'adresse mail par cabau.matthieu@orange.fr
-        //Pour tester un user normal, rempalcer l'adresse mail par cabau.matthieu@gmail.com
+        //Pour tester un user normal, remplacer l'adresse mail par cabau.matthieu@orange.fr
+        //Pour tester un administrateur, remplacer l'adresse mail par cabau.matthieu@gmail.com
         $this->user = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@orange.fr']);
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
         $this->client->loginUser($this->user);
