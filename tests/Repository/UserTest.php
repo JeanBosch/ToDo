@@ -25,8 +25,8 @@ class UserRepositoryTest extends KernelTestCase
     {
         $user = new User();
         $user->setID(100);
-        $user->setUsername('TestUserRepositoryyololkakaka');
-        $user->setEmail('test@yolo.yolokakaka');
+        $user->setUsername('MonsieurTest2');
+        $user->setEmail('emailtest2@yolo.yolokakaka');
         $user->setPassword('testkakaka');
         $user->setRoles(['ROLE_USER']);
         $this->entityManager->getRepository(User::class)->add($user, true);
@@ -38,7 +38,7 @@ class UserRepositoryTest extends KernelTestCase
 
     public function testRemoveUser()
     {
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['id' => 10]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['id' => 15]);
         $this->entityManager->getRepository(User::class)->remove($user, true);
         $this->assertNull($user->getID());
     }

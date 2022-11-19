@@ -39,7 +39,7 @@ class TaskRepositoryTest extends KernelTestCase
 
     public function testRemoveTask()
     {
-        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['id' => 84]);
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['id' => 92]);
         $this->entityManager->getRepository(Task::class)->remove($task, true);
         $this->assertNull($task->getID());
     }

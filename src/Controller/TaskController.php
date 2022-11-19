@@ -11,15 +11,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class TaskController extends AbstractController
 {
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(TaskRepository $repository)
+    public function listAction(TaskRepository $repository, TagAwareCacheInterface $cache)
     {
         $tasks = $repository->findBy(['isDone' => false]);
+        $idCache = 'task_list';
+        $tasks = $cache->get($idCache, function (ItemInterface $item) use ($tasks) {
+            $item ->tag('task_list');
+            $item->expiresAfter(7200);
+            return $tasks;
+        });
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
