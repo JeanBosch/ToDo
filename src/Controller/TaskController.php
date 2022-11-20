@@ -22,12 +22,7 @@ class TaskController extends AbstractController
     public function listAction(TaskRepository $repository, TagAwareCacheInterface $cache)
     {
         $tasks = $repository->findBy(['isDone' => false]);
-        $idCache = 'task_list';
-        $tasks = $cache->get($idCache, function (ItemInterface $item) use ($tasks) {
-            $item ->tag('task_list');
-            $item->expiresAfter(7200);
-            return $tasks;
-        });
+        
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
