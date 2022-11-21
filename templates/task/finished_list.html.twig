@@ -25,6 +25,7 @@
 
                     <p>{{ task.content|nl2br }}</p>
                 </div>
+                {% if app.user %}
                 {% if task.user == app.user or app.user.roles[0] == 'ROLE_ADMIN' %}
                 <div class = "boutons_modif">
                     <form action="{{ path('task_toggle', {'id' : task.id }) }}">
@@ -41,6 +42,7 @@
                         </button>
                     </form>
                 </div>
+                {% endif %}
                 {% endif %}
             </div>
         </div>

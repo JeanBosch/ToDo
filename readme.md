@@ -10,6 +10,7 @@ https://app.codacy.com/project/badge/Grade/3cc71cd3304943e19d69c1c998819aea
 
 1. Clonez ou téléchargez le repository.
 1. Modifiez le fichier .env avec vos paramètres de BDD.
+1. Vous pouvez, si vous le souhaitez, intégrer le jeu de données todo.sql mis à disposition à la racine du dossier.
 1. Ouvrez la console dans le repertoire racine.
 1. Executez dans la console « composer install »  pour installer toutes les dependances.
 
