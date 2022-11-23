@@ -56,8 +56,8 @@ class UserControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->urlGenerator->generate('user_create'));
         if($roleUser[0][0] == "ROLE_ADMIN"){
             $form = $crawler->selectButton('Ajouter')->form();
-            $form['user[username]'] = 'test';
-            $form['user[email]'] = 'test@test.test';
+            $form['user[username]'] = 'testform7';
+            $form['user[email]'] = 'test@test.testform7';
             $form['user[password][first]'] = 'test';
             $form['user[password][second]'] = 'test';
             $form['user[roles]'] = 'ROLE_USER';
@@ -74,7 +74,7 @@ class UserControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->urlGenerator->generate('user_edit', ['id' => $this->userEdit->getId()]));
         if($roleUser[0][0] == "ROLE_ADMIN"){
             $form = $crawler->selectButton('Modifier')->form();
-            $form['user[username]'] = 'testmodif';
+            $form['user[username]'] = 'testmodif52';
             $form['user[password][first]'] = 'test';
             $form['user[password][second]'] = 'test';
             $form['user[email]'] = 'testmodif@test.test';

@@ -30,7 +30,7 @@ class TaskControllerTest extends WebTestCase
         //Pour tester un user normal, remplacer l'adresse mail par cabau.matthieu@orange.fr
         // Pour tester un user admin, remplacer l'adresse mail par cabau.matthieu@gmail.com
         $this->user = $this->userRepository->findOneBy(['email' => 'cabau.matthieu@gmail.com']);
-        $this->task = $this->taskRepository->findOneBy(['id' => '87']);
+        $this->task = $this->taskRepository->findOneBy(['id' => '101']);
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
         $this->client->loginUser($this->user);
     }

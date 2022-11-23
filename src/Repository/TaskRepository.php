@@ -39,6 +39,18 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
+   public function createFixtures()
+    {
+        for($i=0;$i<10;$i++){
+            $task = new Task();
+            $task->setTitle('Task '.$i);
+            $task->setContent('Description '.$i);
+            $task->setCreatedAt(new \DateTime());
+            $this->add($task);
+        }
+    
+    }
+
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */

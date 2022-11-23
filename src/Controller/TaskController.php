@@ -19,7 +19,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(TaskRepository $repository, TagAwareCacheInterface $cache)
+    public function listAction(TaskRepository $repository)
     {
         $tasks = $repository->findBy(['isDone' => false]);
         

@@ -24,8 +24,8 @@ class TaskRepositoryTest extends KernelTestCase
     public function testAddTask()
     {
         $task = new Task();
-        $task->setID(100);
-        $task->setTitle('Testrepository');
+        $task->setID(1000);
+        $task->setTitle('Testrepository10');
         $task->setContent('Test');
         $task->setCreatedAt(new \DateTime());
         $task->setIsDone(false);
@@ -39,7 +39,7 @@ class TaskRepositoryTest extends KernelTestCase
 
     public function testRemoveTask()
     {
-        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['id' => 92]);
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['id' => 112]);
         $this->entityManager->getRepository(Task::class)->remove($task, true);
         $this->assertNull($task->getID());
     }
