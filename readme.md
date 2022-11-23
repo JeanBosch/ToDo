@@ -9,7 +9,9 @@ https://app.codacy.com/project/badge/Grade/3cc71cd3304943e19d69c1c998819aea
 ### Installation
 
 1. Clonez ou téléchargez le repository.
-1. Modifiez le fichier .env avec vos paramètres de BDD et executez avec doctrine les migrations (la premiere migration contient un jeu de données d'exemple que vous pouvez supprimer si vous avez déja votre propre base de données).
+1. Modifiez le fichier .env avec vos paramètres de BDD et executez avec doctrine le premier fichier de migration (Version20221021151431).
+1. Creez vos fixtures avec la commande `php bin/console doctrine:fixtures:load` si vous n'avez pas de jeu de données existant.
+1. Executez le 2eme fichier de migration (Version20221021151432).
 1. Ouvrez la console dans le repertoire racine.
 1. Executez dans la console « composer install »  pour installer toutes les dependances.
 

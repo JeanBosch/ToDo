@@ -37,10 +37,6 @@ final class Version20221021151431 extends AbstractMigration implements Container
         $this->addSql('CREATE INDEX IDX_527EDB25A76ED395 ON task (user_id)');
         $this->addSql('ALTER TABLE user ADD roles JSON NOT NULL');
 
-        $this->addSql('INSERT INTO task (created_at, title, content, is_done, user_id) VALUES (\'2021-10-21 15:14:31\', \'Première tâche\', \'Ceci est la première tâche de la liste.\', 0, NULL)');
-        $this->addSql('INSERT INTO task (created_at, title, content, is_done, user_id) VALUES (\'2021-10-21 15:14:31\', \'Deuxième tâche\', \'Ceci est la deuxième tâche de la liste.\', 0, NULL)');
-        $this->addSql('INSERT INTO task (created_at, title, content, is_done, user_id) VALUES (\'2021-10-21 15:14:31\', \'Troisième tâche\', \'Ceci est la troisième tâche de la liste.\', 0, NULL)');
-        $this->addSql('INSERT INTO task (created_at, title, content, is_done, user_id) VALUES (\'2021-10-21 15:14:31\', \'Quatrième tâche\', \'Ceci est la quatrième tâche de la liste.\', 0, NULL)');
 
     }
 
